@@ -20,8 +20,16 @@
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
 
-- name: Mettre à jour le système
+- name: Mettre à jour le système pour Debian ou Ubuntu
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   ansible.builtin.apt:
+    update_cache: true
+    name: "*"
+    state: latest
+
+- name: Mettre à jour le système pour CentOS
+  when: ansible_distribution == 'CentOS'
+  ansible.builtin.yum:
     update_cache: true
     name: "*"
     state: latest
