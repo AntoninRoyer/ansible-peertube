@@ -7,6 +7,7 @@ pipx install --include-deps ansible
 pipx install ansible-lint # Optional for linting
 pipx ensurepath
 ```
+> ⚠️ **Warning**: Think to kill terminal and open a new one to apply changes of pipx ensurepath
 
 ## Credentials
 Database:
