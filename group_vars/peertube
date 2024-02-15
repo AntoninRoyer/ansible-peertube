@@ -1,4 +1,4 @@
-# Credentials
+#  Credentials
 peertube_user: peertube
 peertube_password: peertube
 
@@ -8,3 +8,6 @@ db_password: peertube
 
 # Paths
 peertube_path: /var/www/peertube
+
+# Dependencies
+nodejs_version: 21.x 

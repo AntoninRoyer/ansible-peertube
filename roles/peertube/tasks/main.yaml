@@ -1,0 +1,50 @@
+---
+    - name: Check if 'peertube' user exists
+      ansible.builtin.command: getent passwd {{ peertube_user }}
+      register: user_check_result
+
+    - name: Create a new user
+      ansible.builtin.user:
+        name: "{{ peertube_user }}"
+        password: "{{ peertube_password | password_hash('sha512') }}"
+        state: present
+        shell: /bin/bash
+        createhome: true
+        home: "{{ peertube_path }}"
+      when: user_check_result.rc != 0
+
+    - name: Install peertube dependencies on Ubuntu or Debian
+      when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+      apt:
+        name: 
+          - curl
+          - unzip
+        state: present
+
+    - name: Install peertube dependencies on CentOS
+      when: ansible_distribution == 'CentOS'
+      yum:
+        name: 
+          - curl
+          - unzip
+        state: present
+
+    - name: Download latest version of nodejs on Debian or Ubuntu
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      shell: "curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }} | sudo -E bash -"
+
+    - name: Download latest version of nodejs on CentOS
+      when: ansible_distribution == 'CentOS'
+      shell: "curl -sL https://rpm.nodesource.com/setup_{{ nodejs_version }} | sudo bash -"    
+    
+    - name: Install nodejs on Debian or Ubuntu
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install nodejs on CentOS
+      when: ansible_distribution == 'CentOS'
+      yum:
+        name: nodejs
+        state: present
