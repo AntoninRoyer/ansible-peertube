@@ -1,0 +1,13 @@
+---
+- name: Create a new user
+  hosts: peertube
+  tasks:
+    - name: Create a new user
+      ansible.builtin.user:
+        name: "{{ username }}"
+        group: "{{ username }}"
+        password: "{{ password }}"
+        state: present
+        shell: /bin/bash
+        createhome: true
+        home: "{{ peertube_path }}"

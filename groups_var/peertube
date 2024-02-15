@@ -1,0 +1,4 @@
+peertube_user: peertube
+peertube_password: peertube
+
+peertube_path: /var/www/peertube
