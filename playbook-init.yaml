@@ -1,0 +1,15 @@
+---
+- name: Control Node
+  hosts: localhost
+  tasks:
+    - name: Generate SSH Key
+      community.general.openssh_keypair:
+        path: "{{ ansible_ssh_private_key_file }}"
+        type: rsa
+        size: 2048
+        state: present
+        
+- name: Initial Playbook
+  hosts: all
+  roles:
+    - init

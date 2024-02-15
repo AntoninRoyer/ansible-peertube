@@ -1,0 +1,27 @@
+---
+- name: Déployer la clé publique
+  ansible.posix.authorized_key:
+    user: anto
+    state: present
+    key: "{{ lookup('file', ansible_ssh_private_key_file + '.pub') }}"
+
+- name: Mise à jour du serveur DNS
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    regexp: ^nameserver
+    line: nameserver 1.1.1.1
+
+- name: Résolution DNS du hostname
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "127.0.1.1  {{ inventory_hostname }}"
+
+- name: Mise à jour du hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Mettre à jour le système
+  ansible.builtin.apt:
+    update_cache: true
+    name: "*"
+    state: latest
