@@ -1,9 +1,9 @@
 ---
 - name: Déployer la clé publique
-  ansible.posix.authorized_key:
-    user: anto
+  authorized_key:
+    user: ansible
     state: present
-    key: "{{ lookup('file', ansible_ssh_private_key_file + '.pub') }}"
+    key: "{{ lookup('file', '/home/ansible/.ssh/id_ed25519.pub') }}"
 
 - name: Mise à jour du serveur DNS
   ansible.builtin.lineinfile:
