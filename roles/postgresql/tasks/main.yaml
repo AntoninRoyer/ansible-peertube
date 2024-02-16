@@ -1,0 +1,10 @@
+---
+
+    - name: Install postgresql  on CentOS
+      when: ansible_distribution == 'CentOS'
+      yum:
+        name: 
+          - postgresql 
+          - postgresql-contrib
+          - postgresql-server
+        state: present

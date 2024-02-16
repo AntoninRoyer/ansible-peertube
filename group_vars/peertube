@@ -11,3 +11,29 @@ peertube_path: /var/www/peertube
 
 # Dependencies
 nodejs_version: 21.x 
+dependencies_list: 
+                  - curl
+                  - unzip
+                  - ffmpeg 
+                  - openssl 
+                  - g++
+                  - make
+                  - redis-server
+                  - git
+                  - cron
+                  - wget
+                  - python3-dev 
+                  - python-is-python3
+
+dependencies_list_rhel:
+                        - curl
+                        - unzip
+                        - dnf-utils
+                        - epel-release
+                        - openssl
+                        - make
+                        - git
+                        - wget
+                        - gcc-c++
+                        - redis 
+                        

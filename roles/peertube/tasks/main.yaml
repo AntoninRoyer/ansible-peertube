@@ -1,6 +1,7 @@
 ---
     - name: Check if 'peertube' user exists
       ansible.builtin.command: getent passwd {{ peertube_user }}
+      ignore_errors: true
       register: user_check_result
 
     - name: Create a new user
@@ -16,18 +17,17 @@
     - name: Install peertube dependencies on Ubuntu or Debian
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
       apt:
-        name: 
-          - curl
-          - unzip
+        name: "{{ dependencies_list }}"
         state: present
+      notify: Start redis
 
     - name: Install peertube dependencies on CentOS
       when: ansible_distribution == 'CentOS'
       yum:
-        name: 
-          - curl
-          - unzip
+        name: "{{ dependencies_list_rhel }}"
         state: present
+      notify: Start redis Centos
+        # todo : install ffpmeg, g++, redis-server, cron
 
     - name: Download latest version of nodejs on Debian or Ubuntu
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
@@ -48,3 +48,13 @@
       yum:
         name: nodejs
         state: present
+
+
+    - name: install yarn using npm
+      npm:
+        name: yarn
+        global: true
+        state: present
+
+        
+
