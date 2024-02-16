@@ -1,18 +1,36 @@
 ---
-    - name: Check if 'peertube' user exists
-      ansible.builtin.command: getent passwd {{ peertube_user }}
-      ignore_errors: true
-      register: user_check_result
+    - name: Check if user '{{ peertube_user }}' exists
+      ansible.builtin.stat:
+        path: "/etc/passwd"
+      register: passwd_file
 
-    - name: Create a new user
+    - name: Search for user entry
+      ansible.builtin.shell: "grep -q '^{{ peertube_user }}:' /etc/passwd"
+      register: user_entry
+      failed_when: false
+      changed_when: false
+      when: passwd_file.stat.exists
+
+    - name: Create user '{{ peertube_user }}' if it does not exist
       ansible.builtin.user:
         name: "{{ peertube_user }}"
-        password: "{{ peertube_password | password_hash('sha512') }}"
         state: present
-        shell: /bin/bash
-        createhome: true
-        home: "{{ peertube_path }}"
-      when: user_check_result.rc != 0
+      when: user_entry.rc != 0
+    # - name: Check if 'peertube' user exists
+    #   ansible.builtin.command: getent passwd {{ peertube_user }}
+    #   ignore_errors: true
+    #   register: user_check_result
+
+    # - name: Create a new user
+    #   ansible.builtin.user:
+    #     name: "{{ peertube_user }}"
+    #     password: "{{ peertube_password | password_hash('sha512') }}"
+    #     state: present
+    #     shell: /bin/bash
+    #     createhome: true
+    #     home: "{{ peertube_path }}"
+    #   when: user_check_result.rc != 0
+
 
     - name: Install peertube dependencies on Ubuntu or Debian
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
@@ -27,7 +45,7 @@
         name: "{{ dependencies_list_rhel }}"
         state: present
       notify: Start redis Centos
-        # todo : install ffpmeg, g++, redis-server, cron
+        # todo : install ffpmeg
 
     - name: Download latest version of nodejs on Debian or Ubuntu
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
