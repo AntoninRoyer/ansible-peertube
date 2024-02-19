@@ -1,10 +1,38 @@
 ---
 
-    - name: Install postgresql  on CentOS
-      when: ansible_distribution == 'CentOS'
-      yum:
-        name: 
-          - postgresql 
-          - postgresql-contrib
-          - postgresql-server
+    - name: Install postgresql 
+      package:
+        name: "{{ postgresql_packages }}"
         state: present
+      notify: 
+        - Start PostgreSQL
+
+    - name: Add PostgreSQL dependencies on Debian
+      when: ansible_os_family == "Debian"
+      package:
+        name:
+          - python3-psycopg2
+        state: present
+      notify: 
+        - Start PostgreSQL
+
+    # - name: Add PostgreSQL dependencies on Centos
+    #   when: ansible_os_family == "Centos"
+    #   package:
+    #     name:
+    #       - postgresql-server
+    #       - libpq-devel 
+    #     state: present
+    #   notify:
+    #     - Start PostgreSQL
+
+    - name: Create PostgreSQL user
+      become_user: postgres
+      postgresql_user: 
+        name: "{{ db_user }}"
+        password: " {{ db_password }} "  
+        encrypted: yes
+
+# todo: Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user (rc: 1, err: chmod: invalid mode: ‘A+user:postgres:rx:allow’\nTry 'chmod --help' for more information.\n}). For information on working around this, see https://docs.ansible.com/ansible-core/2.16/playbook_guide/playbooks_privilege_escalation.html#risks-of-becoming-an-unprivileged-user"}
+
+    

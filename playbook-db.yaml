@@ -1,0 +1,5 @@
+---
+- name: PostgreSQL playbook
+  hosts: peertube
+  roles:
+    - role: postgresql

@@ -36,4 +36,8 @@ dependencies_list_rhel:
                         - wget
                         - gcc-c++
                         - redis 
+
+postgresql_packages:
+                        - postgresql 
+                        - postgresql-contrib
                         
