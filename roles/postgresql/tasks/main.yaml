@@ -26,6 +26,8 @@
     #   notify:
     #     - Start PostgreSQL
 
+
+
     - name: Create PostgreSQL user
       become_user: postgres
       postgresql_user: 
@@ -33,6 +35,38 @@
         password: " {{ db_password }} "  
         encrypted: yes
 
-# todo: Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user (rc: 1, err: chmod: invalid mode: ‘A+user:postgres:rx:allow’\nTry 'chmod --help' for more information.\n}). For information on working around this, see https://docs.ansible.com/ansible-core/2.16/playbook_guide/playbooks_privilege_escalation.html#risks-of-becoming-an-unprivileged-user"}
+    - name: Create PostgreSQL database
+      become_user: postgres
+      postgresql_db:
+        name: "{{ db_name }}"
+        owner: "{{ db_user }}"
+        encoding: UTF8
+        template: template0
+
+    - name: Create PostgreSQL extensions
+      become_user: postgres
+      vars: 
+        postgresql_extensions:
+          - "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+          - "CREATE EXTENSION IF NOT EXISTS unaccent;"
+      loop: "{{ postgresql_extensions }}"
+      postgresql_query:
+        db: "{{ db_name }}"  
+        query: "{{ item }}"
+        state: present
+
+      
+      
+
+
+
+
+    
+    
+
+
+
+
+
 
     

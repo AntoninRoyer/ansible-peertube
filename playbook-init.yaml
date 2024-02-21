@@ -11,6 +11,20 @@
         force: false
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
+
+    - name: Retrieve latest Peertube version from GitHub API
+      uri:
+        url: https://api.github.com/repos/chocobozzz/peertube/releases/latest
+        return_content: yes
+      register: latest_version_raw
+
+    - name: Parse latest Peertube version
+      set_fact:
+        latest_version: "{{ latest_version_raw.json.tag_name }}"
+      when: latest_version_raw.status == 200
+
+
+
 - name: Initial Playbook
   hosts: all
   roles:

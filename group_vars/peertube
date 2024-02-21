@@ -40,4 +40,6 @@ dependencies_list_rhel:
 postgresql_packages:
                         - postgresql 
                         - postgresql-contrib
+
+
                         
