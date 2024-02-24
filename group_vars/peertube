@@ -2,7 +2,7 @@
 peertube_user: peertube
 peertube_password: peertube
 
-db_name: peertube
+db_name: peertube_prod
 db_user: peertube
 db_password: peertube
 
