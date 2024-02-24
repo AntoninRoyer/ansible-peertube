@@ -7,6 +7,6 @@
     - database
     - prepare_directories
     - peertube_config
-    # - webserver
+    - webserver
     - linux_tcp_tuning
     - systemd

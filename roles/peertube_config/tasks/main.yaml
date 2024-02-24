@@ -17,3 +17,9 @@
     owner: peertube
     group: peertube
     mode: '0644'
+
+- name: Replace value in the production.yaml file
+  ansible.builtin.replace:
+    path: "/var/www/peertube/config/production.yaml"
+    regexp: 'secret: ".*"'
+    replace: 'secret: "{{ peertube_secret }}"'
