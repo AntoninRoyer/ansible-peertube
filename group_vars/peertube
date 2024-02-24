@@ -24,6 +24,9 @@ dependencies_list:
                   - wget
                   - python3-dev 
                   - python-is-python3
+                  - postgresql
+                  - postgresql-contrib
+                  - certbot
 
 dependencies_list_rhel:
                         - curl

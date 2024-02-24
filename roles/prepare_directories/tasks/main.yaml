@@ -1,0 +1,71 @@
+---
+- name: Fetch the latest tagged version of Peertube
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/Chocobozzz/PeerTube/releases/latest"
+    return_content: true
+    headers:
+      Accept: application/vnd.github.v3+json
+  register: result
+
+- name: Set the latest tagged version of Peertube
+  ansible.builtin.set_fact:
+    peertube_version: "{{ result.json.tag_name }}"
+
+- name: Création des répertoires config, storage, et versions pour Peertube
+  ansible.builtin.file:
+    path: "/var/www/peertube/{{ item }}"
+    state: directory
+    owner: peertube
+    group: peertube
+    mode: '0750'
+  loop:
+    - config
+    - storage
+    - versions
+
+- name: Modifier les permissions du répertoire config
+  ansible.builtin.file:
+    path: "/var/www/peertube/config"
+    state: directory
+    owner: peertube
+    group: peertube
+    mode: '0750'
+
+- name: Download PeerTube release zip
+  ansible.builtin.get_url:
+    url: "https://github.com/Chocobozzz/PeerTube/releases/download/{{ peertube_version }}/peertube-{{ peertube_version }}.zip"
+    dest: "/var/www/peertube/versions/peertube-{{ peertube_version }}.zip"
+    owner: peertube
+    group: peertube
+    mode: '0640'
+
+- name: Extract PeerTube release zip
+  ansible.builtin.unarchive:
+    src: "/var/www/peertube/versions/peertube-{{ peertube_version }}.zip"
+    dest: "/var/www/peertube/versions/"
+    remote_src: true
+    owner: peertube
+    group: peertube
+  notify:
+    - Remove PeerTube release zip
+
+- name: Create symbolic link to the latest PeerTube version
+  ansible.builtin.file:
+    src: "{{ peertube_path }}/versions/peertube-{{ peertube_version }}"
+    dest: "{{ peertube_path }}/peertube-latest"
+    state: link
+
+- name: Ensure symbolic link has correct ownership
+  ansible.builtin.file:
+    path: "{{ peertube_path }}/peertube-latest"
+    owner: peertube
+    group: peertube
+    state: link
+    mode: '0750'
+    force: true
+
+- name: Install PeerTube dependencies with yarn
+  ansible.builtin.shell: |
+    cd {{ peertube_path }}/peertube-latest && sudo -H -u peertube yarn install --production --pure-lockfile
+  args:
+    executable: /bin/bash

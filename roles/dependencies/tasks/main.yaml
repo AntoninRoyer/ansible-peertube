@@ -1,8 +1,42 @@
 ---
-# Ubuntu Debian
-- name: Install peertube dependencies on Ubuntu or Debian
+- name: Install PeerTube dependencies
   ansible.builtin.apt:
     name: "{{ dependencies_list }}"
     state: present
-  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
   notify: Start redis
+
+- name: Check if desired Node.js version is installed
+  ansible.builtin.shell: "node -v | grep '{{ nodejs_version }}' || true"
+  register: node_version_check
+  changed_when: false
+  failed_when: false
+  ignore_errors: true
+
+- name: Import NodeSource Node.js setup script
+  ansible.builtin.shell: |
+    curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }} | bash -
+  become: true
+  become_user: root
+  when: node_version_check.stdout == ""
+
+- name: Install Node.js
+  ansible.builtin.apt:
+    update_cache: true
+    name: nodejs
+    state: present
+  when: node_version_check.stdout == ""
+
+- name: Check if Yarn is installed
+  ansible.builtin.command: yarn --version
+  register: yarn_version
+  failed_when: false
+  changed_when: false
+
+- name: Install Yarn if it is not installed
+  ansible.builtin.shell: npm install --global yarn
+  when: yarn_version.rc != 0
+
+- name: Update npm to the latest version
+  ansible.builtin.shell: npm install -g npm
+  register: npm_update
+  changed_when: "'updated' in npm_update.stdout"

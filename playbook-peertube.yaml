@@ -4,8 +4,8 @@
   roles:
     - dependencies
     - user
-    # - database
-    # - prepare_directories
+    - database
+    - prepare_directories
     # - peertube config
     # - webserver
     # - linux_tcp_tuning
