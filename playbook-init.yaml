@@ -2,7 +2,7 @@
 - name: Control Node
   hosts: localhost
   tasks:
-    - name: Generate SSH Ke
+    - name: Generate SSH Key
       community.crypto.openssh_keypair:
         path: "/home/{{ ansible_user }}/.ssh/id_ed25519"
         type: ed25519
