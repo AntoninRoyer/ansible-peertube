@@ -1,0 +1,14 @@
+---
+- name: Copy PeerTube sysctl configuration
+  ansible.builtin.copy:
+    src: /var/www/peertube/peertube-latest/support/sysctl.d/30-peertube-tcp.conf
+    dest: /etc/sysctl.d/
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+
+- name: Apply sysctl settings for PeerTube
+  ansible.builtin.shell: sysctl -p /etc/sysctl.d/30-peertube-tcp.conf
+  args:
+    executable: /bin/bash

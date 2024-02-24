@@ -1,0 +1,19 @@
+---
+- name: Copy default.yaml to config directory as the peertube user
+  ansible.builtin.copy:
+    src: "/var/www/peertube/peertube-latest/config/default.yaml"
+    dest: "/var/www/peertube/config/default.yaml"
+    remote_src: true
+    owner: peertube
+    group: peertube
+    mode: '0644'
+
+# TODO: import ownn file
+- name: Copy production.yaml.example to production.yaml as the peertube user
+  ansible.builtin.copy:
+    src: "/var/www/peertube/peertube-latest/config/production.yaml.example"
+    dest: "/var/www/peertube/config/production.yaml"
+    remote_src: true
+    owner: peertube
+    group: peertube
+    mode: '0644'
