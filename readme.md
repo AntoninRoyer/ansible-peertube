@@ -7,7 +7,6 @@ sudo apt install python3-pip pipx sshpass
 pipx install --include-deps ansible
 pipx install ansible-lint # Optional for linting
 pipx ensurepath
-ansible-galaxy collection install community.general
 ```
 > ⚠️ **Warning**: Think to kill terminal and open a new one to apply changes of pipx ensurepath
 

@@ -1,17 +1,12 @@
 ---
-   
-   - name: Start redis
-     service:
-            name: redis-server
-            enabled: yes
-            state: started
+- name: Start redis
+  service:
+        name: redis-server
+        enabled: yes
+        state: started
 
-   - name: Start redis Centos
-     service:
-            name: redis
-            enabled: yes
-            state: started
-
-
-  
-
+- name: Start redis Centos
+  service:
+        name: redis
+        enabled: yes
+        state: started

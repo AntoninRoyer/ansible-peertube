@@ -1,6 +1,12 @@
 ---
-
-- name: Create a new user
+- name: Install Peertube
   hosts: peertube
   roles:
-    - peertube
+    - dependencies
+    - user
+    - database
+    - prepare_directories
+    - peertube_config
+    - webserver
+    - linux_tcp_tuning
+    - systemd

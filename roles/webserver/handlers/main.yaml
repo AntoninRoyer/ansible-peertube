@@ -1,0 +1,17 @@
+---
+- name: Replace ${WEBSERVER_HOST} placeholder
+  ansible.builtin.replace:
+    path: /etc/nginx/sites-available/peertube
+    regexp: "\\$\\{WEBSERVER_HOST\\}"
+    replace: "{{ peertube_domain }}"
+
+- name: Replace ${PEERTUBE_HOST} placeholder
+  ansible.builtin.replace:
+    path: /etc/nginx/sites-available/peertube
+    regexp: "\\$\\{PEERTUBE_HOST\\}"
+    replace: '127.0.0.1:9000'
+
+- name: Reload Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
