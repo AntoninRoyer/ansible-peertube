@@ -1,0 +1,8 @@
+---
+# Ubuntu Debian
+- name: Install peertube dependencies on Ubuntu or Debian
+  ansible.builtin.apt:
+    name: "{{ dependencies_list }}"
+    state: present
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+  notify: Start redis
