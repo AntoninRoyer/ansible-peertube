@@ -1,0 +1,46 @@
+---
+- name: Copy PeerTube Nginx configuration to sites-available
+  ansible.builtin.copy:
+    src: /var/www/peertube/peertube-latest/support/nginx/peertube
+    dest: /etc/nginx/sites-available/peertube
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+  notify:
+    - Replace ${WEBSERVER_HOST} placeholder
+    - Replace ${PEERTUBE_HOST} placeholder
+
+- name: Create path for SSL certificate
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/live/{{ peertube_domain }}"
+    state: directory
+    mode: '0755'
+
+- name: Generate private key
+  community.crypto.openssl_privatekey:
+    path: "/etc/letsencrypt/live/{{ peertube_domain }}/privkey.pem"
+    size: 4096
+
+- name: Generate SSL certificate
+  community.crypto.x509_certificate:
+    path: "/etc/letsencrypt/live/{{ peertube_domain }}/fullchain.pem"
+    privatekey_path: "/etc/letsencrypt/live/{{ peertube_domain }}/privkey.pem"
+    provider: selfsigned
+  notify:
+    - Reload Nginx
+
+- name: Enable PeerTube Nginx configuration
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/peertube
+    dest: /etc/nginx/sites-enabled/peertube
+    state: link
+  notify:
+    - Reload Nginx
+
+- name: Remove default Nginx configuration
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+    - Reload Nginx

@@ -1,13 +1,12 @@
 ---
-- name: Create a new user
+- name: Install Peertube
   hosts: peertube
-  tasks:
-    - name: Create a new user
-      ansible.builtin.user:
-        name: "{{ username }}"
-        group: "{{ username }}"
-        password: "{{ password }}"
-        state: present
-        shell: /bin/bash
-        createhome: true
-        home: "{{ peertube_path }}"
+  roles:
+    - dependencies
+    - user
+    - database
+    - prepare_directories
+    - peertube_config
+    - webserver
+    - linux_tcp_tuning
+    - systemd

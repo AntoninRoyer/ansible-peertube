@@ -1,0 +1,75 @@
+---
+- name: Check if peertube user exists
+  ansible.builtin.stat:
+    path: "/etc/passwd"
+  register: passwd_file
+
+- name: Search for user entry
+  ansible.builtin.shell: "grep -q '^{{ peertube_user }}:' /etc/passwd"
+  register: user_entry
+  failed_when: false
+  changed_when: false
+  when: passwd_file.stat.exists
+
+- name: Create user peertube user if it does not exist
+  ansible.builtin.user:
+    name: "{{ peertube_user }}"
+    state: present
+  when: user_entry.rc != 0
+  # - name: Check if 'peertube' user exists
+  #   ansible.builtin.command: getent passwd {{ peertube_user }}
+  #   ignore_errors: true
+  #   register: user_check_result
+
+  # - name: Create a new user
+  #   ansible.builtin.user:
+  #     name: "{{ peertube_user }}"
+  #     password: "{{ peertube_password | password_hash('sha512') }}"
+  #     state: present
+  #     shell: /bin/bash
+  #     createhome: true
+  #     home: "{{ peertube_path }}"
+  #   when: user_check_result.rc != 0
+
+
+- name: Install peertube dependencies on Ubuntu or Debian
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+  ansible.builtin.apt:
+    name: "{{ dependencies_list }}"
+    state: present
+  notify: Start redis
+
+- name: Install peertube dependencies on CentOS
+  when: ansible_distribution == 'CentOS'
+  ansible.builtin.yum:
+    name: "{{ dependencies_list_rhel }}"
+    state: present
+  notify: Start redis Centos
+    # todo : install ffpmeg
+
+- name: Download latest version of nodejs on Debian or Ubuntu
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  ansible.builtin.shell: "curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }} | sudo -E bash -"
+
+- name: Download latest version of nodejs on CentOS
+  when: ansible_distribution == 'CentOS'
+  ansible.builtin.shell: "curl -sL https://rpm.nodesource.com/setup_{{ nodejs_version }} | sudo bash -"
+
+- name: Install nodejs on Debian or Ubuntu
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  ansible.builtin.apt:
+    name: nodejs
+    state: present
+
+- name: Install nodejs on CentOS
+  when: ansible_distribution == 'CentOS'
+  ansible.builtin.yum:
+    name: nodejs
+    state: present
+
+
+- name: Install yarn using npm
+  community.general.npm:
+    name: yarn
+    global: true
+    state: present

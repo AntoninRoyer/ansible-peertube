@@ -4,13 +4,25 @@
   tasks:
     - name: Generate SSH Key
       community.crypto.openssh_keypair:
-        path: "/home/{{ansible_user}}/.ssh/id_ed25519"
+        path: "/home/{{ ansible_user }}/.ssh/id_ed25519"
         type: ed25519
         size: 2048
         state: present
         force: false
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
+
+    - name: Retrieve latest Peertube version from GitHub API
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/chocobozzz/peertube/releases/latest
+        return_content: true
+      register: latest_version_raw
+
+    - name: Parse latest Peertube version
+      ansible.builtin.set_fact:
+        latest_version: "{{ latest_version_raw.json.tag_name }}"
+      when: latest_version_raw.status == 200
+
 - name: Initial Playbook
   hosts: all
   roles:

@@ -1,0 +1,22 @@
+---
+- name: Copy peertube.service to systemd system directory
+  ansible.builtin.copy:
+    src: /var/www/peertube/peertube-latest/support/systemd/peertube.service
+    dest: /etc/systemd/system/peertube.service
+    remote_src: true
+    mode: "0644"
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable peertube on boot
+  ansible.builtin.systemd:
+    name: peertube
+    enabled: true
+    state: started
+
+- name: Start peertube
+  ansible.builtin.systemd:
+    name: peertube
+    state: started

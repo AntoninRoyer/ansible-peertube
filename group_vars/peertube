@@ -1,0 +1,50 @@
+#  Credentials
+peertube_user: peertube
+peertube_password: peertube
+
+db_name: peertube_prod
+db_user: peertube
+db_password: peertube
+
+# Paths
+peertube_path: /var/www/peertube
+peertube_domain: peertube.local
+
+# Dependencies
+nodejs_version: 21.x 
+dependencies_list: 
+                  - curl
+                  - nginx
+                  - unzip
+                  - ffmpeg
+                  - openssl
+                  - g++
+                  - make
+                  - redis-server
+                  - git
+                  - cron
+                  - wget
+                  - python3-dev
+                  - python-is-python3
+                  - postgresql
+                  - postgresql-contrib
+                  - certbot
+
+dependencies_list_rhel:
+                        - curl
+                        - unzip
+                        - dnf-utils
+                        - epel-release
+                        - openssl
+                        - make
+                        - git
+                        - wget
+                        - gcc-c++
+                        - redis 
+
+postgresql_packages:
+                        - postgresql 
+                        - postgresql-contrib
+
+
+                        
