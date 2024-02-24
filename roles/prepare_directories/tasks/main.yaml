@@ -55,14 +55,16 @@
     dest: "{{ peertube_path }}/peertube-latest"
     state: link
 
-- name: Ensure symbolic link has correct ownership
+- name: Ensure correct ownership and permissions for PeerTube directories
   ansible.builtin.file:
-    path: "{{ peertube_path }}/peertube-latest"
+    path: "{{ item }}"
     owner: peertube
     group: peertube
-    state: link
-    mode: '0750'
-    force: true
+    recurse: yes
+    state: directory
+  loop:
+    - /var/www/peertube/versions/peertube-v6.0.3
+    - /var/www/peertube/peertube-latest
 
 - name: Install PeerTube dependencies with yarn
   ansible.builtin.shell: |
