@@ -4,5 +4,5 @@
     name: "{{ peertube_user }}"
     shell: /bin/bash
     home: "{{ peertube_path }}"
-    password: "{{ peertube_password }}"
+    password: "{{ peertube_password | password_hash }}"
     state: present
