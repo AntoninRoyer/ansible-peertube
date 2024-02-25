@@ -5,26 +5,26 @@
     state: present
   notify: Start redis
 
-- name: Check if desired Node.js version is installed
-  ansible.builtin.shell: "node -v | grep '{{ nodejs_version }}' || true"
-  register: node_version_check
-  changed_when: false
-  failed_when: false
-  ignore_errors: true
+# - name: Check if desired Node.js version is installed
+#   ansible.builtin.shell: "node -v | grep '{{ nodejs_version }}' || true"
+#   register: node_version_check
+#   changed_when: false
+#   failed_when: false
+#   ignore_errors: true
 
-- name: Import NodeSource Node.js setup script
-  ansible.builtin.shell: |
-    curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }} | bash -
-  become: true
-  become_user: root
-  when: node_version_check.stdout == ""
+# - name: Import NodeSource Node.js setup script
+#   ansible.builtin.shell: |
+#     curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }} | bash -
+#   become: true
+#   become_user: root
+#   when: node_version_check.stdout == ""
 
-- name: Install Node.js
-  ansible.builtin.apt:
-    update_cache: true
-    name: nodejs
-    state: present
-  when: node_version_check.stdout == ""
+# - name: Install Node.js
+#   ansible.builtin.apt:
+#     update_cache: true
+#     name: nodejs
+#     state: present
+#   when: node_version_check.stdout == ""
 
 - name: Check if Yarn is installed
   ansible.builtin.command: yarn --version

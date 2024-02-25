@@ -17,7 +17,7 @@
     state: directory
     owner: peertube
     group: peertube
-    mode: '0750'
+    mode: '0755'
   loop:
     - config
     - storage
@@ -54,17 +54,18 @@
     src: "{{ peertube_path }}/versions/peertube-{{ peertube_version }}"
     dest: "{{ peertube_path }}/peertube-latest"
     state: link
-
-- name: Ensure correct ownership and permissions for PeerTube directories
-  ansible.builtin.file:
-    path: "{{ item }}"
     owner: peertube
     group: peertube
-    recurse: yes
+    follow: false
+
+- name: Put good permissions on the peertube-latest directory
+  ansible.builtin.file:
+    path: "{{ peertube_path }}/peertube-latest"
     state: directory
-  loop:
-    - /var/www/peertube/versions/peertube-v6.0.3
-    - /var/www/peertube/peertube-latest
+    owner: peertube
+    group: peertube
+    mode: '0755'
+    recurse: true
 
 - name: Install PeerTube dependencies with yarn
   ansible.builtin.shell: |

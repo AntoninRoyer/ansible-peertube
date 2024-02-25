@@ -29,6 +29,8 @@ dependencies_list:
                   - postgresql
                   - postgresql-contrib
                   - certbot
+                  - nodejs
+                  - npm
 
 dependencies_list_rhel:
                         - curl
