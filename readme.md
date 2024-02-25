@@ -35,7 +35,7 @@ sudo apt install openssh-server
 ## Credentials of the project
 Database:
 ```
-database: peertube
+database: peertube_prod
 user: peertube
 password: peertube
 ```
