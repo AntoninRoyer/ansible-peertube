@@ -26,10 +26,3 @@
     name: "*"
     state: latest
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-- name: Mettre à jour le système pour CentOS
-  ansible.builtin.yum:
-    update_cache: true
-    name: "*"
-    state: latest
-  when: ansible_distribution == 'CentOS'

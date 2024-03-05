@@ -6,3 +6,12 @@
     home: "{{ peertube_path }}"
     password: "{{ peertube_password }}"
     state: present
+
+- name: Apply rights on home folder
+  ansible.builtin.file:
+    path: "/var/www/peertube/"
+    state: directory
+    owner: peertube
+    group: peertube
+    mode: '0755'
+    recurse: true

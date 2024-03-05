@@ -11,8 +11,8 @@ peertube_path: /var/www/peertube
 peertube_domain: peertube.local
 
 # Dependencies
-nodejs_version: 21.x 
-dependencies_list: 
+nodejs_version: "20.1"
+dependencies_list:
                   - curl
                   - nginx
                   - unzip
@@ -29,8 +29,7 @@ dependencies_list:
                   - postgresql
                   - postgresql-contrib
                   - certbot
-                  - nodejs
-                  - npm
+                  - software-properties-common
 
 dependencies_list_rhel:
                         - curl

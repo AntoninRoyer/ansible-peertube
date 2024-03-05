@@ -1,0 +1,17 @@
+---
+- name: Create .ssh folder
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.ssh"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0700"
+- name: Generate SSH Key
+  community.crypto.openssh_keypair:
+    path: "/home/{{ ansible_user }}/.ssh/id_ed25519"
+    type: ed25519
+    size: 2048
+    state: present
+    force: false
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"

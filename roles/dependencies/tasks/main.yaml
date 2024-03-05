@@ -5,6 +5,19 @@
     state: present
   notify: Start redis
 
+- name: Télécharger et exécuter le script de configuration de Node.js
+  ansible.builtin.get_url:
+    url: "https://deb.nodesource.com/setup_21.x"
+    dest: "/tmp/setup_node.sh"
+
+- name: Exécuter le script de configuration de Node.js
+  ansible.builtin.command: "/bin/bash /tmp/setup_node.sh"
+
+- name: Installer Node.js
+  ansible.builtin.apt:
+    name: nodejs
+    state: present
+
 - name: Check if Yarn is installed
   ansible.builtin.command: yarn --version
   register: yarn_version
