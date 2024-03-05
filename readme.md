@@ -3,7 +3,7 @@
 ### Ansible
 Install ansible in your working directory:
 ```bash
-sudo apt install python3-pip pipx sshpass
+sudo apt install python3-pip pipx sshpass python3-passlib
 pipx install --include-deps ansible
 pipx install ansible-lint # Optional for linting
 pipx ensurepath
