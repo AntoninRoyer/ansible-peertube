@@ -4,7 +4,7 @@
     name: "{{ peertube_user }}"
     shell: /bin/bash
     home: "{{ peertube_path }}"
-    password: "{{ peertube_password }}"
+    password: "{{ peertube_password | password_hash('sha512') }}"
     state: present
 
 - name: Apply rights on home folder
