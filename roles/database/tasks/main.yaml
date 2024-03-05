@@ -1,12 +1,12 @@
 ---
-- name: Add PostgreSQL dependencies on Debian
+- name: Add PostgreSQL python dependencies on Debian
   when: ansible_os_family == "Debian"
   ansible.builtin.package:
     name:
       - python3-psycopg2
     state: present
   notify:
-    - Start PostgreSQL
+    - Restart PostgreSQL
 
 - name: Create a PostgreSQL user
   become_user: postgres
