@@ -1,13 +1,17 @@
-#  Credentials
+#  User
 peertube_user: peertube
 peertube_password: peertube
 
-db_name: peertube_prod
+# Database
+db_name: peertube_prod # do not change
 db_user: peertube
 db_password: peertube
 
 # Paths
 peertube_path: /var/www/peertube
+
+# variables
+peertube_secret: "222b2d8b724815a73dc183d3e991d989a4828fbaaaea90eb5d97e976703aeccf"
 peertube_domain: peertube.local
 
 # Dependencies

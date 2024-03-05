@@ -1,7 +1,7 @@
 ---
 - name: Copy PeerTube Nginx configuration to sites-available
   ansible.builtin.copy:
-    src: /var/www/peertube/peertube-latest/support/nginx/peertube
+    src: "{{ peertube_path }}/peertube-latest/support/nginx/peertube"
     dest: /etc/nginx/sites-available/peertube
     owner: root
     group: root

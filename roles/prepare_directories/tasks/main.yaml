@@ -13,7 +13,7 @@
 
 - name: Création des répertoires config, storage, et versions pour Peertube
   ansible.builtin.file:
-    path: "/var/www/peertube/{{ item }}"
+    path: "{{ peertube_path }}/{{ item }}"
     state: directory
     owner: peertube
     group: peertube
@@ -25,7 +25,7 @@
 
 - name: Modifier les permissions du répertoire config
   ansible.builtin.file:
-    path: "/var/www/peertube/config"
+    path: "{{ peertube_path }}/config"
     state: directory
     owner: peertube
     group: peertube
@@ -34,15 +34,15 @@
 - name: Download PeerTube release zip
   ansible.builtin.get_url:
     url: "https://github.com/Chocobozzz/PeerTube/releases/download/{{ peertube_version }}/peertube-{{ peertube_version }}.zip"
-    dest: "/var/www/peertube/versions/peertube-{{ peertube_version }}.zip"
+    dest: "{{ peertube_path }}/versions/peertube-{{ peertube_version }}.zip"
     owner: peertube
     group: peertube
     mode: '0640'
 
 - name: Extract PeerTube release zip
   ansible.builtin.unarchive:
-    src: "/var/www/peertube/versions/peertube-{{ peertube_version }}.zip"
-    dest: "/var/www/peertube/versions/"
+    src: "{{ peertube_path }}/versions/peertube-{{ peertube_version }}.zip"
+    dest: "{{ peertube_path }}/versions/"
     remote_src: true
     owner: peertube
     group: peertube

@@ -1,7 +1,7 @@
 ---
 - name: Copy peertube.service to systemd system directory
   ansible.builtin.copy:
-    src: /var/www/peertube/peertube-latest/support/systemd/peertube.service
+    src: "{{ peertube_path }}/peertube-latest/support/systemd/peertube.service"
     dest: /etc/systemd/system/peertube.service
     remote_src: true
     mode: "0644"

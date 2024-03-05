@@ -1,5 +1,5 @@
 ---
 - name: Remove PeerTube release zip
   ansible.builtin.file:
-    path: "/var/www/peertube/versions/peertube-{{ peertube_version }}.zip"
+    path: "{{ peertube_path }}/versions/peertube-{{ peertube_version }}.zip"
     state: absent

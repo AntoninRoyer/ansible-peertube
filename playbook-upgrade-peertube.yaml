@@ -1,0 +1,5 @@
+---
+- name: Update Peertube
+  hosts: peertube
+  roles:
+   - upgrade-peertube

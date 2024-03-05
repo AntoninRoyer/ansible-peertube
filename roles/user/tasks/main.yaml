@@ -9,7 +9,7 @@
 
 - name: Apply rights on home folder
   ansible.builtin.file:
-    path: "/var/www/peertube/"
+    path: "{{ peertube_path }}"
     state: directory
     owner: peertube
     group: peertube

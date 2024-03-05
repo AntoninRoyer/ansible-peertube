@@ -1,7 +1,7 @@
 ---
 - name: Copy PeerTube sysctl configuration
   ansible.builtin.copy:
-    src: /var/www/peertube/peertube-latest/support/sysctl.d/30-peertube-tcp.conf
+    src: "{{ peertube_path }}/peertube-latest/support/sysctl.d/30-peertube-tcp.conf"
     dest: /etc/sysctl.d/
     owner: root
     group: root

@@ -1,0 +1,69 @@
+---
+- name: Check for PeerTube update and run upgrade script
+  become_user: peertube
+  block:
+    - name: Change directory to PeerTube scripts
+      command: "chdir={{ peertube_path }}/peertube-latest/scripts"
+
+    - name: Execute the upgrade script
+      shell: ./upgrade.sh
+      args:
+        chdir: "{{ peertube_path }}/peertube-latest/scripts"
+        executable: /bin/bash
+
+- name: Restart PeerTube
+  systemd:
+    name: peertube
+    state: restarted
+
+- name: Clean yarn cache
+  become_user: peertube
+  shell: yarn cache clean
+  args:
+    executable: /bin/bash
+
+- name: Check and update PeerTube configuration
+  become_user: peertube
+  block:
+    - name: Diff current and new production configuration
+      command: diff -u "$(ls --sort=t {{ peertube_path }}/versions/*/config/production.yaml.example | head -2 | tail -1)" "$(ls --sort=t {{ peertube_path }}/versions/*/config/production.yaml.example | head -1)"
+      register: production_config_diff
+      failed_when: production_config_diff.stdout != ""
+      ignore_errors: yes
+
+    - name: Manual step required if the above task fails
+      debug:
+        msg: "Manual update required for production.yaml based on diff output above."
+
+- name: Check and update Nginx configuration
+  block:
+    - name: Diff current and new Nginx configuration
+      command: diff -u "$(ls --sort=t {{ peertube_path }}/versions/*/support/nginx/peertube | head -2 | tail -1)" "$(ls --sort=t{{ peertube_path }}/versions/*/support/nginx/peertube | head -1)"
+      register: nginx_config_diff
+      failed_when: nginx_config_diff.stdout != ""
+      ignore_errors: yes
+
+    - name: Reload Nginx if configuration changed
+      systemd:
+        name: nginx
+        state: reloaded
+      when: nginx_config_diff.stdout != ""
+
+- name: Check and update systemd service
+  block:
+    - name: Diff current and new systemd configuration
+      command: diff -u "$(ls --sort=t {{ peertube_path }}/versions/*/support/systemd/peertube.service | head -2 | tail -1)" "$(ls --sort=t {{ peertube_path }}/versions/*/support/systemd/peertube.service | head -1)"
+      register: systemd_config_diff
+      failed_when: systemd_config_diff.stdout != ""
+      ignore_errors: yes
+
+    - name: Reload systemd daemon if configuration changed
+      systemd:
+        daemon_reload: yes
+      when: systemd_config_diff.stdout != ""
+
+- name: Restart PeerTube and check logs
+  systemd:
+    name: peertube
+    state: restarted
+  register: peertube_restart
