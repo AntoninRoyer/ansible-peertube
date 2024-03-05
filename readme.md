@@ -69,7 +69,7 @@ password: peertube
 ## Installation
 clone the repository:
 ```bash
-git clone
+git clone https://github.com/AntoninRoyer/ansible-peertube.git
 ```
 
 Go to the ansible-peertube directory:
@@ -103,3 +103,4 @@ To upgrade the application, you can run the playbook peertube with the tag upgra
 ```bash
 ansible-playbook playbook-upgrade-peertube.yml
 ```
+> ⚠️ **Warning**: This feature is not implemented correctly yet

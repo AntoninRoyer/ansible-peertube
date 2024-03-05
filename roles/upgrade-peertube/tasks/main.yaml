@@ -1,6 +1,5 @@
 ---
 - name: Check for PeerTube update and run upgrade script
-  become_user: peertube
   block:
     - name: Change directory to PeerTube scripts
       command: "chdir={{ peertube_path }}/peertube-latest/scripts"
@@ -17,13 +16,11 @@
     state: restarted
 
 - name: Clean yarn cache
-  become_user: peertube
   shell: yarn cache clean
   args:
     executable: /bin/bash
 
 - name: Check and update PeerTube configuration
-  become_user: peertube
   block:
     - name: Diff current and new production configuration
       command: diff -u "$(ls --sort=t {{ peertube_path }}/versions/*/config/production.yaml.example | head -2 | tail -1)" "$(ls --sort=t {{ peertube_path }}/versions/*/config/production.yaml.example | head -1)"
